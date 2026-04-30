@@ -27,8 +27,6 @@ public class SteamService
 
     private decimal ParsePrice(string price)
     {
-        // "€38,50" → 38.50
-        // Remove currency symbol and whitespace
         var cleaned = price.Replace("€", "").Replace("$", "").Trim();
 
         // European format uses comma as decimal separator
