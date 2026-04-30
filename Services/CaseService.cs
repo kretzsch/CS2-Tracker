@@ -1,22 +1,42 @@
+using Cs2Tracker.Data;
 using Cs2Tracker.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cs2Tracker.Services;
 
 public class CaseService
 {
-    private List<Case> _cases = new()
-    {
-        new Case
-        {
-            Id = 1,
-            Name = "CS:GO Weapon Case",
-            Price = 0.45m,
-            UpdatedAt = DateTime.UtcNow
-        }
-    };
+    private readonly ApplicationDbContext _db;
 
-    public List<Case> GetAll()
+    public CaseService(ApplicationDbContext db)
     {
-        return _cases;
+        _db = db;
+    }
+
+    public async Task<List<Case>> GetAllAsync()
+    {
+        return await _db.Cases.ToListAsync();
+    }
+
+    public async Task<Case?> GetByNameAsync(string name)
+    {
+        return await _db.Cases.FirstOrDefaultAsync(c => c.Name == name);
+    }
+
+    public async Task AddOrUpdateAsync(Case caseItem)
+    {
+        var existing = await GetByNameAsync(caseItem.Name);
+
+        if (existing != null)
+        {
+            existing.Price = caseItem.Price;
+            existing.UpdatedAt = DateTime.UtcNow;
+        }
+        else
+        {
+            _db.Cases.Add(caseItem);
+        }
+
+        await _db.SaveChangesAsync();
     }
 }
