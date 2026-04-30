@@ -1,0 +1,71 @@
+﻿@page "/"
+@inject HttpClient Http
+@using Cs2Tracker.Models
+
+<PageTitle>CS2 Case Tracker</PageTitle>
+
+<MudText Typo="Typo.h3" Class="mb-4">🎮 CS2 Case Price Tracker</MudText>
+
+@if (cases == null)
+{
+    <MudGrid>
+        <MudItem xs="12" Class="d-flex justify-center align-center" Style="min-height: 400px;">
+            <div class="text-center">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+                <MudText Typo="Typo.body1" Class="mt-4">Loading case prices...</MudText>
+            </div>
+        </MudItem>
+    </MudGrid>
+}
+else if (!cases.Any())
+{
+    <MudAlert Severity="Severity.Warning" Variant="Variant.Filled">
+        <strong>No cases found!</strong> The database might be empty. Wait for the background service to fetch prices.
+    </MudAlert>
+}
+else
+{
+    <MudGrid Spacing="3">
+        @foreach (var caseItem in cases)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudCard Elevation="2" Class="case-card">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Class="mb-2">@caseItem.Name</MudText>
+                        <MudText Typo="Typo.h4" Color="Color.Primary" Class="my-3">
+                            €@caseItem.Price.ToString("F2")
+                        </MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                            Updated: @caseItem.UpdatedAt.ToString("dd/MM/yyyy HH:mm")
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private List<Case>? cases;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cases = await Http.GetFromJsonAsync<List<Case>>("http://localhost:5207/api/Case");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading cases: {ex.Message}");
+            cases = new List<Case>();
+        }
+    }
+
+    public class Case
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public decimal Price { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "API+Web",
+    "Projects": [
+      {
+        "Path": "src\\Cs2Tracker.Api\\Cs2Tracker.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\Cs2Tracker.Web\\Cs2Tracker.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

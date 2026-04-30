@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Cs2Tracker.Api/Cs2Tracker.Api.csproj" />
+    <Project Path="src/Cs2Tracker.Web/Cs2Tracker.Web.csproj" />
+  </Folder>
+</Solution>
