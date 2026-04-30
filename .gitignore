@@ -53,6 +53,27 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
-# GitHub Copilot / IDE artifacts
+# Visual Studio cache/options directories
+.vs/
+
+# Visual Studio Code directories
+.vscode/
+
+# GitHub Copilot
+.github/copilot-instructions.md
 .copilot/
+**/Copilot/
 copilot-snapshots/
+**/.copilot/
+.slnx/
+
+# Copilot index files
+**/CopilotIndices/
+*.db
+*.db-shm
+*.db-wal
+SemanticSymbols.db*
+CodeChunks.db*
+
+# State files
+*.state.mpack
