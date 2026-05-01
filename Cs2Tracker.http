@@ -1,6 +1,0 @@
-@Cs2Tracker_HostAddress = http://localhost:5207
-
-GET {{Cs2Tracker_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

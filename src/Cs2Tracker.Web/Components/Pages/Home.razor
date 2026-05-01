@@ -4,7 +4,14 @@
 
 <PageTitle>CS2 Case Tracker</PageTitle>
 
-<MudText Typo="Typo.h3" Class="mb-4">🎮 CS2 Case Price Tracker</MudText>
+<MudText Typo="Typo.h3" Class="mb-2">🎮 CS2 Case Price Tracker</MudText>
+
+@if (cases != null && cases.Any())
+{
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+        Tracking @cases.Count CS2 weapon cases from the Steam Community Market
+    </MudText>
+}
 
 @if (cases == null)
 {

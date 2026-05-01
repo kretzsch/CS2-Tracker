@@ -80,7 +80,7 @@ public class PriceUpdateService : BackgroundService
             "Spectrum Case",
             "Spectrum 2 Case",
 
-            
+
             "Glove Case",
             "Huntsman Weapon Case",
             "Falchion Case",
@@ -104,6 +104,10 @@ public class PriceUpdateService : BackgroundService
             "Fever Case"
         };
 
+        _logger.LogInformation("Starting price update for {Count} cases", casesToTrack.Length);
+        var successCount = 0;
+        var failCount = 0;
+
         foreach (var caseName in casesToTrack)
         {
             try
@@ -119,20 +123,28 @@ public class PriceUpdateService : BackgroundService
                         UpdatedAt = DateTime.UtcNow
                     });
 
-                    _logger.LogInformation("Updated {CaseName}: €{Price}", caseName, price.Value);
+                    _logger.LogInformation("✅ Updated {CaseName}: €{Price}", caseName, price.Value);
+                    successCount++;
                 }
                 else
                 {
-                    _logger.LogWarning("Could not fetch price for {CaseName}", caseName);
+                    _logger.LogWarning("❌ Could not fetch price for {CaseName}", caseName);
+                    failCount++;
                 }
 
                 // Delay between Steam API calls to avoid rate limiting
-                await Task.Delay(TimeSpan.FromSeconds(10), CancellationToken.None);
+                // Use 2 seconds in development, 10 in production
+                var delay = TimeSpan.FromSeconds(2);
+                await Task.Delay(delay, CancellationToken.None);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching price for {CaseName}", caseName);
+                _logger.LogError(ex, "❌ Error fetching price for {CaseName}", caseName);
+                failCount++;
             }
         }
+
+        _logger.LogInformation("Price update completed: {Success} successful, {Failed} failed out of {Total} total", 
+            successCount, failCount, casesToTrack.Length);
     }
 }
